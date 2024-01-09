@@ -100,7 +100,7 @@
               "type": "backlink",
               "state": {
                 "file": "Coursera Course_Getting Started with Git and GitHub.md",
-                "collapseAll": false,
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -143,11 +143,12 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 378.5,
     "collapsed": true
   },
   "left-ribbon": {
