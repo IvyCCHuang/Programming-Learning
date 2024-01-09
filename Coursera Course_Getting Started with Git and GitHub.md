@@ -507,16 +507,333 @@ As you start working with GitHub repositories and automating workflows, using th
 
 6 videos (33min) 1 reading 2 quizzes 2 app items 3 plugins
 
-#### Overview of Git Workflows•6 minutes•[Preview module](https://www.coursera.org/lecture/getting-started-with-git-and-github/overview-of-git-workflows-ZL8gJ)
-#### Overview of Git Commands•5 minutes
-#### Demo: Working with Branches using Git Commands•4 minutes
-#### Cloning and Forking GitHub Projects•6 minutes
-#### Cloning versus Forking•6 minutes
-#### Managing GitHub Projects•3 minutes
+## Git Workflows
+### typical workflow in a software development project
+1. Cloning the remote repository 克隆远程仓库
+2. Pushing & pulling changes 
+3. Implementing the feature in local repository 
+	```mermaid
+		sequenceDiagram
+		
+		Participant LC As Local Computer
+		Participant RR As Remote Repository 
+		
+		RR->>LC:Code with version history
+		LC->>RR:Push
+		RR->>LC:Pull
+		Note left of LC: feature implementation
+	```
+4. Creating a branch
+	```mermaid
+	sequenceDiagram
+	Participant Changes
+	Participant MB As Main Branch
+	
+	Changes-->MB:❌
+	Note over Changes,MB: until code ready
+	
+	MB->>Branch: add a feature <br>without interfering
+	```
+5. Committing files
+	```mermaid
+	sequenceDiagram
+	Participant F As Files
+	Participant SA As Staging Area
+	Participant Branch
+	Participant RR As Remote Repository
+	F->>SA: 
+	SA->>Branch: Commit
+	Note over SA, Branch: Implemented product <br>recommendation feature
+	Branch->>RR:Push
+	```
+6. Reviewing code
+	```mermaid
+	sequenceDiagram
+	Participant PR As Pull Request
+	Actor M As Maintainer
+	Participant MB As Main branch in the remote repository
+	
+	M->>MB: Code review
+	
+	Note left of M: to merge branch
+		
+	PR->>M: Code review
+	M->>MB: Merge
+	```
 
-### 1 reading•Total 2 minutes
+### start a project from scratch and intend to collaborate with others
+1. Starting a new project
+2. Committing and pushing files
+	```mermaid
+	sequenceDiagram
+	Participant F As Files
+	Participant SA As Staging Area
+	Participant LPD As Local Project Directory
+	Participant RR As Remote Repository
+	
+	Note over SA: Local
+	
+	F->>SA: 
+	SA->>LPD: Initial Commit
+	
+	loop Link
+		LPD-->RR: Push
+	end
 
-#### Summary: Git Workflows with Git Commands•2 minutes
+	RR->>Cloned Repository: by other Developers
+	```
+
+### Scenario: Web application development
+```mermaid
+sequenceDiagram
+Actor LD As Anne<br>(Lead Developer)
+participant L As Local
+participant R As Remote
+Actor D As Developer(s)
+
+LD->>L: Initializes a Git repository
+LD->>L: Moves files to the staging area
+LD->>L: Performs initial commit
+LD->>R: Pushes commit to blank repository
+
+Note left of D: e.g. John, responsible for implementing <br>a user authentication feature
+D->>L: Clones remote repository
+D->>L: Create (a) branch(es)<br>e.g. user_auth branch
+D->>L: Commits to the branch
+Note over D,R: Testing
+D->>R: Pushes the branch to remote<br>and creates a pull request
+
+LD->>R: Approves pull request and merges changes
+
+Note over LD, L: Web application: Project release
+LD->>R: Creates a release branch (e.g. release1.0)
+D->>L: Pulls changes from release 1.0
+D->>L: Performs testing and updates
+D->>R: Pushes commits to remote and creates a pull request
+LD->>R: Approves pull requests and merges changes
+```
+
+## Git Commands
+
+General command-line commands: 
+	- `mkdir`: make new directory
+	- `cd`: navigate to the directory
+
+Git commands: 
+|   |   |   |
+|---|---|---|
+ 
+|Git Commands|Functions|Examples|
+|`git init`|1. New repository; <br>2. Sets up necessary files and data structures for project's version control|   |
+|`git add [FILE.SUFFIX]`|Moves changes from the working directory to the staging area;|`git add index.html`|
+|`git commit` <br>`git commit -m "[REMARKS]"`|Saves the changes with a descriptive message|`git commit -m "Created a new HTML file"`|
+|`git log`|Enables to browse previous changes to a project|   |
+|`git branch [FILE]`|lists, creates, renames and even deletes branches within a Git repository|`git branch code_list`|
+|`git checkout [FILE]`|Allows to switch between existing branches|`git checkout code_list`|
+|`git add [FILE.SUFFIX]`|Push the new changes to the staging area|`git add index.html`|
+|`git commit` <br>`git commit -m "[REMARKS]"`|Commit the changes|`git commit -m "Updated index.html file in branch"`|
+|`git status`|Allows to view the status of all changes|   |
+|`git merge [FILE]`|Allows to merge the feature branch to the main branch|`git merge code_list`|
+
+In this reading, you will summarize and describe additional Git commands that you may use while working on your projects. You will also look at the syntax for each command.
+
+Git is a widely used version control system that offers numerous benefits to developers and teams working on software development projects.
+
+Let's look at some useful Git commands and understand them:
+1. **`git add`**
+    - _Description_: It adds changes to the staging area. This command stages the changes made to the files and prepares them for the next commit.
+    - _Syntax_:
+        - **`git add <filename.txt>`** (to add a specific file)
+        - **`git add .`** (to add all the files that are new or changed in the current directory)
+        - **`git add -A`** (to add all changes in the entire working tree, from the root of the repository, regardless of where you are in the directory structure)
+2. **`git reset`**
+    - _Description_: It resets changes in the working directory. When used with –hard HEAD, this command discards all changes made to the working directory and staging area and resets the repository to the last commit (HEAD).
+    - _Syntax_:
+        - **`git reset`**
+        - **`git reset –hard HEAD`**
+3. **`git branch`**
+    - _Description_: It lists, creates, or deletes branches in a repository. To delete the branch, first check out the branch using **git checkout** and then run the command to delete the branch locally.
+    - _Syntax_:
+        - **`git branch`** (to list branches)
+        - **`git branch <new-branch>`** (to create a new branch)
+        - **`git branch -d <branch-name>`** (to delete a branch)
+4. **`git checkout main`**
+    - _Description_: It switches to the "main" branch. This will switch your current branch to "main."
+    - _Syntax_: **`git checkout main`**
+5. **`git clone`**
+    - _Description_: It copies a repository from a remote source to your local machine. This will create a copy of the repository in your current working directory.
+    - _Syntax_: **git clone \<repository URL\>**
+6. **`git pull`**
+    - _Description_: It fetches changes from a remote repository and merges them into your local branch. First, switch to the branch that you want to merge changes into by running the **git checkout** command. Then, run the **git pull** command, which will fetch the changes from the main branch of the origin remote repository and merge them into your current branch.
+    - _Syntax_: **`git pull origin main`**
+7. **`git push`**
+    - _Description_: It uploads local repository content to a remote repository. Make sure you are on the branch that you want to push by running the **git checkout** command first, then push the branch to the remote repository.
+    - _Syntax_: **`git push origin <branch-name>`**
+8. **`git version`**
+    - _Description_: It displays the current Git version installed on your system.
+    - _Syntax_: **`git version`**
+9. **`git diff`**
+    - _Description_: It shows changes between commits, commit and working tree, etc. It also compares the branches.
+    - _Syntax_:
+        - **`git diff`** (shows the difference between the working directory and the last commit)
+        - **`git diff HEAD~1 HEAD`** (shows the difference between the last and second-last commits)
+        - **`git diff <branch-1> <branch-2>`** (compares the specified branches)
+10. **git revert**
+    - _Description_: It reverts a commit by applying a new commit. This will create a new commit that undoes the changes made by the last commit.
+    - _Syntax_: **git revert HEAD**
+11. **`git config –global user.email <Your GitHub Email>`**
+    - _Description_: It sets a global email configuration for Git. This needs to be executed before doing a commit to authenticate the user's email ID.
+    - _Syntax_: **`git config –global user.email <Your GitHub Email>`**
+12. **`git config –global user.name <Your GitHub Username>`**
+    - _Description_: It sets a global username configuration for Git. This needs to be executed before doing a commit to authenticate users' username.
+    - _Syntax_: **`git config –global user.name <Your GitHub Username>`**
+13. **`git remote`**
+    - _Description_: It lists the names of all remote repositories associated with your local repository.
+    - _Syntax_: **`git remote`**
+14. **`git remote -v`**
+    - _Description_: It lists all remote repositories that your local Git repository is connected to, along with the URLs associated with those remote repositories.
+    - _Syntax_: **`git remote -v`**
+15. **`git remote add origin <URL>`**
+    - _Description_: It adds a remote repository named "origin" with the specified URL.
+    - _Syntax_: **`git remote add origin <URL>`**
+16. **`git remote rename`**
+    - _Description_: The git remote rename command is followed by the name of the remote repository (origin) you want to rename and the new name (upstream) you want to give it. This will rename the "origin" remote repository to "upstream."
+    - _Syntax_: **`git remote rename origin upstream`**
+17. **`git remote rm <name>`**
+    - _Description_: It adds a remote repository named "origin" with the specified URL.
+    - _Syntax_: **`git remote rm origin`**
+18. **`git format-patch`**
+    - _Description_: It generates patches for email submission. These patches can be used for submitting changes via email or for sharing them with others.
+    - _Syntax_: **`git format-patch HEAD~3`** (creates patches for the last three commits)
+19. **`git request-pull`**
+    - _Description_: It generates a summary of pending changes for an email request. It helps communicate the changes made in a branch or fork to the upstream repository maintainer.
+    - _Syntax_: **`git request-pull origin/main <myfork or branch_name>`**
+20. **`git send-email`**
+    - _Description_: It sends a collection of patches as emails. It allows you to send multiple patch files to recipients via email. Please make sure to set the email address and name using the **git config** command so that the email client knows the sender's information when sending the emails.
+    - _Syntax_: **`git send-email *.patch`**
+21. **`git am`**
+    - _Description_: It applies patches to the repository. It takes a patch file as input and applies the changes specified in the patch file to the repository.
+    - _Syntax_: **`git am <patchfile.patch>`**
+22. **`git daemon`**
+    - _Description_: It exposes repositories via the Git:// protocol. The Git protocol is a lightweight protocol designed for efficient communication between Git clients and servers.
+    - _Syntax_: **`git daemon –base-path=/path/to/repositories`**
+23. **`git instaweb`**
+    - _Description_: It instantly launches a web server to browse repositories. It provides a simplified way to view repository contents through a web interface without the need for configuring a full web server.
+    - _Syntax_: **`git instaweb –httpd=webrick`**
+24. **`git rerere`**
+    - _Description_: It reuses recorded resolution of previously resolved merge conflicts. Please note that rerere.enabled configuration option needs to be set to "true" (**git config –global rerere.enabled true**) for git rerere to work. Additionally, note that git rerere only applies to conflicts that have been resolved using the same branch and commit.
+    - _Syntax_: **`git rerere`**
+
+Author: Anamika Agarwal
+Other Contributor: Lavanya T S
+
+```Git
+git init
+
+git checkout
+
+git revert
+
+git-format-patch
+
+git fetch upstream
+
+git status
+
+git merge
+
+git config --global user.email
+
+git-request-pull
+
+git merge upstream/main
+
+git add .
+
+git clone
+
+git config --global user.name
+
+git-send-email
+
+git pull upstream
+
+git commit 
+
+git pull
+
+git remote -v
+
+git-am
+
+git web
+
+git log
+
+git push
+
+git remote rename
+
+git-daemon
+
+git-instaweb
+
+git reset
+
+git version
+
+git remote add origin
+
+git remote -v
+
+git-pull downstream
+
+git branch
+
+git diff
+
+git-remote
+
+git remote add upstream
+
+git-rerere
+```
+### Demo: Working with Branches using Git Commands
+
+
+You would typically use Git commands from your own desktop/laptop. However, so you can get started using the commands quickly without having to download or install anything, we are providing an IDE with a Terminal on the Cloud. Simply click the "Launch App" below to launch the Skills Network Cloud IDE and in the new browser tab that launches, follow the instructions to practice the Git commands. After completing this lab you will be able to use git commands to start working with creating and managing your code branches, including:
+
+1. create a new local repository using git init
+    
+2. create and add a file to the repo using git add
+    
+3. commit changes using git commit
+    
+4. create a branch using git branch
+    
+5. switch to a branch using git checkout
+    
+6. check the status of files changed using git status
+    
+7. review recent commits using git log
+    
+8. revert changes using git revert
+    
+9. get a list of branches and active branch using git branch
+    
+10. merge changes in your active branch into another branch using git merge
+    
+
+If you are unable to open the lab or view it properly, please click [here](https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-CD0131EN-SkillsNetwork/labs/git-branch-commands/instructions.md.html "Open lab instructions in new window.") to view the HTML version full screen in a new browser tab.
+
+---
+
+This course uses a third-party app, Hands-On Lab: Getting Started with Branches using Git Commands, to enhance your learning experience. The app will reference basic information like your name, email, and Coursera ID.
+## ==Cloning== and ==Forking== GitHub Projects
+### Cloning vs Forking
+### Managing GitHub Projects
+
+
 
 ### 2 quizzes•Total 31 minutes
 
